@@ -1,0 +1,43 @@
+---
+- name: Disable Transparent Hugepages
+  shell: |
+    if test -f /sys/kernel/mm/transparent_hugepage/enabled; then echo never > /sys/kernel/mm/transparent_hugepage/enabled; fi;
+    if test -f /sys/kernel/mm/transparent_hugepage/defrag; then echo never > /sys/kernel/mm/transparent_hugepage/defrag; fi;
+
+- name: create script to Disable Transparent Hugepages
+  template:
+    src: "{{ item }}"
+    dest: /etc/init.d/disable-transparent-hugepages
+    mode: 0755
+  # Choose the distro-specific template. We must specify the templates
+  # path here because with_first_found tries to find files in files/
+  with_first_found:
+    - files:
+      - "{{ ansible_os_family }}/disable-transparent-hugepages.j2"
+      - disable-transparent-hugepages.j2
+      paths:
+        - ../templates
+  when: ansible_service_mgr|default() != 'systemd'
+
+- name: create Disable Transparent Hugepages systemd service
+  template:
+    src: "{{ item }}"
+    dest: /etc/systemd/system/disable-transparent-hugepages.service
+    mode: 0644
+  with_first_found:
+    - files:
+      - "{{ ansible_os_family }}/disable-transparent-hugepages.service.j2"
+      - disable-transparent-hugepages.service.j2
+      paths:
+        - ../templates
+  when: ansible_service_mgr|default() == "systemd"
+
+- name: set Disable Transparent Hugepages to start at boot
+  service:
+    name: disable-transparent-hugepages
+    enabled: yes
+
+- name: ensure Disable Transparent Hugepages is started
+  service:
+    name: disable-transparent-hugepages
+    state: started
