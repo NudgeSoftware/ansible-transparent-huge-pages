@@ -1,6 +1,8 @@
 # Disable transparent huge pages
 
-For use on linux, on sb servers (redis, cassandra, mongodb, etc)
+For use on linux, on db servers (redis, cassandra, mongodb, etc)
+
+See https://docs.mongodb.com/v3.2/tutorial/transparent-huge-pages/ for details.
 
 ## Requirements
 
