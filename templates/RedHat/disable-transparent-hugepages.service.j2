@@ -1,5 +1,9 @@
 [Unit]
 Description=Disable Transparent Huge Pages
+{% for service in start_before %}
+Wants={{ service }}
+Before={{ service }}
+{% endfor %}
 
 [Service]
 Type=oneshot

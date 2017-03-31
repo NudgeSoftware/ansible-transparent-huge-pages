@@ -7,8 +7,8 @@ Before={{ service }}
 
 [Service]
 Type=oneshot
-ExecStart=/usr/bin/sh -c "/usr/bin/echo never | tee /sys/kernel/mm/transparent_hugepage/enabled"
-ExecStart=/usr/bin/sh -c "/usr/bin/echo never | tee /sys/kernel/mm/transparent_hugepage/defrag"
+ExecStart=/bin/sh -c "/bin/echo never > /sys/kernel/mm/transparent_hugepage/enabled"
+ExecStart=/bin/sh -c "/bin/echo never > /sys/kernel/mm/transparent_hugepage/defrag"
 
 [Install]
 WantedBy=multi-user.target
